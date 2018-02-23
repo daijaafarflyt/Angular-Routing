@@ -9,17 +9,18 @@ import { ProductEditTagsComponent } from './product-edit-tags.component';
 import { ProductFilterPipe } from './product-filter.pipe';
 import { ProductService } from './product.service';
 import { ProductResolver } from './product-resolver.service';
-
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
+import { ProductEditGuard } from './product-guard.service';
 
 @NgModule({
   imports: [
     SharedModule,
     RouterModule.forChild([
-      { 
-        path: 'products', 
-        children : [
+      // { 
+      //   path: 'products', 
+      //   canActivate: [ AuthGuard ],
+      //   children : [
           {
             path: '',
             component: ProductListComponent
@@ -32,6 +33,7 @@ import { RouterModule } from '@angular/router';
           {
             path: ':id/edit', 
             component: ProductEditComponent,
+            canDeactivate: [ ProductEditGuard ],
             resolve: { product: ProductResolver },
             children: [
               { path: '', redirectTo: 'info', pathMatch: 'full' },
@@ -39,8 +41,8 @@ import { RouterModule } from '@angular/router';
               { path: 'tags', component: ProductEditTagsComponent }
             ]
           }
-        ]
-      }
+      //   ]
+      // }
     ])
   ],
   declarations: [
@@ -53,7 +55,8 @@ import { RouterModule } from '@angular/router';
   ],
   providers: [
     ProductService,
-    ProductResolver
+    ProductResolver,
+    ProductEditGuard
   ]
 })
 export class ProductModule { }
